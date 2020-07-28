@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="pane_login" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cmbird.javafx.controller.PrintController">
+   <children>
+<!--      <MenuBar>-->
+<!--         <Menu fx:id="menu1" text="设置" />-->
+<!--         <Menu fx:id="menu2" text="关于" />-->
+<!--      </MenuBar>-->
+      <Label layoutX="37.0" layoutY="96.0" text="选择打印机">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="printer" layoutX="168.0" layoutY="88.0" prefHeight="34.0" prefWidth="168.0">
+
+      </ChoiceBox>
+
+
+      <Label layoutX="146.0" layoutY="114.0" />
+      <TextField fx:id="logStoragePath" layoutX="168.0" layoutY="135.0" prefHeight="29.0" prefWidth="168.0" promptText="日志存放路径">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Label layoutX="37.0" layoutY="141.0" text="日志存放路径">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="temporaryFileStorageDirectory" layoutX="168.0" layoutY="174.0" prefHeight="29.0" prefWidth="168.0" promptText="临时文件存放目录">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Label layoutX="38.0" layoutY="179.0" text="临时文件存放路径">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Button fx:id="btn_confirm" layoutX="86.0" layoutY="226.0" mnemonicParsing="false" onAction="#confirm" prefHeight="29.0" prefWidth="210.0" text="保  存" textFill="#02011b">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Label layoutX="120.0" layoutY="272.0" text="上海重明鸟软件有限公司" />
+      <Label contentDisplay="CENTER" layoutX="64.0" layoutY="35.0" prefHeight="23.0" prefWidth="257.0" text="     上海重明鸟软件有限公司 ">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
