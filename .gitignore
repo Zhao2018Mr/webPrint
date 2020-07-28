@@ -17,6 +17,7 @@ target/
 *.iml
 *.ipr
 
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -28,3 +29,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### MAVEN ###
+mvnw
+mvnw.cmd
+.mvn
+src/main/resources/static/
