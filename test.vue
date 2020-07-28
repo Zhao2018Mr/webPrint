@@ -71,7 +71,7 @@
         }
       },
       send: function () {
-          this.socket.send(document.getElementById("kd").innerHTML)
+          this.socket.send(document.getElementById("nr").innerHTML)
 
       },
       close: function () {
