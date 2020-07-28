@@ -33,7 +33,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
-        primaryStage.setTitle("登录界面");
+        primaryStage.setTitle("打印插件");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -42,6 +42,7 @@ public class App extends Application {
     @Override
     public void stop() throws Exception {
         springContext.stop();
+        System.exit(0);
     }
 
 
