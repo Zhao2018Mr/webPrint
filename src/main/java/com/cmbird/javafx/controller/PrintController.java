@@ -2,6 +2,7 @@ package com.cmbird.javafx.controller;
 
 
 import com.cmbird.utils.DialogUtil;
+import com.cmbird.utils.FileUtils;
 import com.cmbird.utils.LoginConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -76,6 +77,8 @@ public class PrintController implements Initializable {
         // 默认第一个
         printer.setValue(printServices[0].getName());
         loadPerferences();
+        // 创建文件夹
+        FileUtils.mkdirDirectory(PrintController.temporaryFileStorageDirectoryStatic);
 
     }
 
@@ -114,6 +117,8 @@ public class PrintController implements Initializable {
         PrintController.logStoragePathStatic=logStoragePath.getText();
         PrintController.temporaryFileStorageDirectoryStatic=temporaryFileStorageDirectory.getText();
         savePreferences();
+        // 创建文件夹
+        FileUtils.mkdirDirectory(PrintController.temporaryFileStorageDirectoryStatic);
         DialogUtil.showMessage("保存",null,"保存成功");
     }
 
