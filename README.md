@@ -11,4 +11,4 @@
 https://github.com/Zhao2018Mr/webPrint/blob/master/test.vue
 
 #### 说明
-只做了html方式,其他方式待扩展
+目前支持 HTML、网络图片等方式进行打印.

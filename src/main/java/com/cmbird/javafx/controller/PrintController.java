@@ -35,6 +35,9 @@ public class PrintController implements Initializable {
     public static final String PRINT = "print";
 
     public static final String LOG_STORAGE_PATH_KEY = "logStoragePath";
+    /**
+     * 临时文件存放目录
+     */
     public static final String TEMPORARY_FILE_STORAGE_DIRECTORY_KEY = "temporaryFileStorageDirectory";
     public static final String PRINTER_KEY = "printer";
 

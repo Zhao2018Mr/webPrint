@@ -1,5 +1,10 @@
 package com.cmbird.utils;
 
+import com.cmbird.javafx.controller.PrintController;
+import com.cmbird.strategy.impl.UrlPrintStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.print.*;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
@@ -10,10 +15,13 @@ import java.io.*;
 
 public class PrintUtils {
 
+    private static Logger logger= LoggerFactory.getLogger(PrintUtils.class);
+
+
     // 传入文件和打印机名称
-    public static void JPGPrint(File file, String printerName) throws PrintException {
+    public static AjaxResult JPGPrint(File file) {
         if (file == null) {
-            System.err.println("缺少打印文件");
+            return AjaxResult.error("未找到打印文件，请检查。");
         }
         InputStream fis = null;
         try {
@@ -27,35 +35,39 @@ public class PrintUtils {
             aset.add(Sides.DUPLEX);//单双面
             // 定位打印服务
             PrintService printService = null;
-            if (printerName != null) {
+            if (PrintController.printStatic != null) {
                 //获得本台电脑连接的所有打印机
                 PrintService[] printServices = PrinterJob.lookupPrintServices();
 
                 if(printServices == null || printServices.length == 0) {
-//                    DialogUtil.showError("打印失败",null,"未找到可用打印机，请检查。");
-                    System.out.print("打印失败，未找到可用打印机，请检查。");
-                    return ;
+                    return AjaxResult.error("未找到可用打印机，请检查。");
                 }
                 //匹配指定打印机
                 for (int i = 0;i < printServices.length; i++) {
-                    if (printServices[i].getName().contains(printerName)) {
+                    if (printServices[i].getName().contains(PrintController.printStatic)) {
                         printService = printServices[i];
                         break;
                     }
                 }
                 if(printService==null){
-                    System.out.print("打印失败，未找到名称为" + printerName + "的打印机，请检查。");
-//                    DialogUtil.showError("打印失败",null,"未找到名称为" + printerName + "的打印机，请检查。");
-                    return ;
+                    return AjaxResult.error("未找到名称为" +  PrintController.printStatic + "的打印机，请检查。");
                 }
             }
-            fis = new FileInputStream(file); // 构造待打印的文件流
+            // 构造待打印的文件流
+            fis = new FileInputStream(file);
             Doc doc = new SimpleDoc(fis, flavor, null);
-            DocPrintJob job = printService.createPrintJob(); // 创建打印作业
-            job.print(doc, aset);
+            // 创建打印作业
+            DocPrintJob job = printService.createPrintJob();
+            try {
+                job.print(doc, aset);
+            } catch (PrintException e) {
+                e.printStackTrace();
+                logger.error(TraceUtils.getTrace(e));
+            }
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
-//            DialogUtil.showError("打印失败",null,"文件为找到，请检查。");
+            logger.error(TraceUtils.getTrace(e1));
+            return AjaxResult.error("文件未找到，请检查。");
         } finally {
             // 关闭打印的文件流
             if (fis != null) {
@@ -63,8 +75,10 @@ public class PrintUtils {
                     fis.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    logger.error(TraceUtils.getTrace(e));
                 }
             }
         }
+        return AjaxResult.success();
     }
 }

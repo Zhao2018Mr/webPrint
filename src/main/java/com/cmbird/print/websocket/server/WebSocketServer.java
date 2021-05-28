@@ -1,17 +1,19 @@
 package com.cmbird.print.websocket.server;
 
-import com.cmbird.javafx.controller.PrintController;
-import com.cmbird.utils.DialogUtil;
-import com.cmbird.utils.HtmlImgGenerator;
-import com.cmbird.utils.HtmlToImageUtils;
-import com.cmbird.utils.PrintUtils;
+import com.alibaba.fastjson.JSON;
+import com.cmbird.factory.FactoryForPrintStrategy;
+import com.cmbird.print.websocket.domain.RequestVo;
+import com.cmbird.strategy.impl.HtmlPrintStrategy;
+import com.cmbird.utils.AjaxResult;
+import com.cmbird.utils.SpringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import javax.print.PrintException;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,6 +26,9 @@ public class WebSocketServer {
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
     private static ConcurrentHashMap<String, Session> sessionPools = new ConcurrentHashMap<>();
+
+    private Logger logger= LoggerFactory.getLogger(WebSocketServer.class);
+
 
     //发送消息
     public void sendMessage(Session session, String message) throws IOException {
@@ -62,37 +67,32 @@ public class WebSocketServer {
     public void onClose(@PathParam(value = "sid") String userName){
         sessionPools.remove(userName);
         subOnlineCount();
+        logger.info(userName + "断开webSocket连接！当前人数为" + onlineNum);
         System.out.println(userName + "断开webSocket连接！当前人数为" + onlineNum);
     }
 
     //收到客户端信息
     @OnMessage
-    public void onMessage(String message) throws IOException{
-//        message = "客户端：" + message + ",已收到";
-//        HtmlImgGenerator.html2Img("123",message,"D:/aaa.png");
-
-//        System.out.println(message);
-//        String saveImageLocation = "E:\\save.png";
-        try {
-            HtmlToImageUtils.html2Img(message, PrintController.temporaryFileStorageDirectoryStatic);
-            PrintUtils.JPGPrint(new File(PrintController.temporaryFileStorageDirectoryStatic),PrintController.printStatic);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onMessage(String data) throws Exception {
+        logger.info("打印----{}",data);
+        RequestVo requestVo= JSON.parseObject(data,RequestVo.class);
+        AjaxResult ajaxResult = SpringUtil.getBean(FactoryForPrintStrategy.class).getStrategy(requestVo.getType()).print(requestVo.getData());
         for (Session session: sessionPools.values()) {
             try {
-                sendMessage(session, "打印成功");
+                sendMessage(session, JSON.toJSONString(ajaxResult));
             } catch(Exception e){
                 e.printStackTrace();
                 continue;
             }
         }
+        logger.info("打印结束----{}",JSON.toJSONString(ajaxResult));
     }
 
     //错误时调用
     @OnError
     public void onError(Session session, Throwable throwable){
         System.out.println("发生错误");
+        logger.info("发生错误");
         throwable.printStackTrace();
     }
 
