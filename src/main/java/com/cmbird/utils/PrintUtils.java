@@ -78,6 +78,8 @@ public class PrintUtils {
                     logger.error(TraceUtils.getTrace(e));
                 }
             }
+            //删除图片
+            file.delete();
         }
         return AjaxResult.success();
     }

@@ -5,6 +5,7 @@ import com.cmbird.javafx.controller.PrintController;
 import com.cmbird.print.websocket.domain.RequestVo;
 import com.cmbird.strategy.PrintStrategy;
 import com.cmbird.utils.AjaxResult;
+import com.cmbird.utils.Constants;
 import com.cmbird.utils.PrintUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,11 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.print.DocFlavor;
 import javax.print.PrintException;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * url 方式打印
@@ -62,10 +65,20 @@ public class UrlPrintStrategy implements PrintStrategy {
         String imagePath= PrintController.temporaryFileStorageDirectoryStatic + System.currentTimeMillis()+i + SUFFIX;
         try {
             url = new URL(u);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(5 * 1000);
-            InputStream in = conn.getInputStream();
+            InputStream in = null;
+            if(u.toUpperCase(Locale.ROOT).contains(Constants.HTTPS)){
+                // https 请求地址
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5 * 1000);
+                in = conn.getInputStream();
+            }else if(u.toUpperCase(Locale.ROOT).contains(Constants.HTTP)){
+                // http 请求地址
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5 * 1000);
+                in = conn.getInputStream();
+            }
             byte[] data = readInputStream(in);
             File f = new File(imagePath);
             FileOutputStream out = new FileOutputStream(f);
