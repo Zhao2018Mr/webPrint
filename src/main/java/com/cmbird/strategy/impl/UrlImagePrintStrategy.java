@@ -12,12 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.print.DocFlavor;
-import javax.print.PrintException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,10 +25,10 @@ import java.util.Locale;
  * @date 2021年05月28日 13:16
  */
 @Component("url-image")
-public class UrlPrintStrategy implements PrintStrategy {
+public class UrlImagePrintStrategy implements PrintStrategy {
 
 
-    private Logger logger= LoggerFactory.getLogger(UrlPrintStrategy.class);
+    private Logger logger= LoggerFactory.getLogger(UrlImagePrintStrategy.class);
 
     /**
      * 后缀名
@@ -43,16 +40,16 @@ public class UrlPrintStrategy implements PrintStrategy {
     /**
      * URL 方式打印
      *
-     * @param data list
+     * @param  list
      * @return java.lang.String
      * @author zyj
      * @date 2021/5/28 13:17
      */
     @Override
-    public AjaxResult print(String data) throws Exception {
-        List<String> urls = JSON.parseArray(data, String.class);
+    public AjaxResult print(RequestVo requestVo) throws Exception {
+        List<String> urls = JSON.parseArray(requestVo.getData(), String.class);
         for (int i = 0; i < urls.size(); i++) {
-           AjaxResult ajaxResult = PrintUtils.JPGPrint(new File(getImg(urls.get(i),i)));
+           AjaxResult ajaxResult = PrintUtils.JPGPrint(new File(getImg(urls.get(i),i)),requestVo.getPrinter());
             if (200 != (Integer)ajaxResult.get("code")) {
                 return ajaxResult;
             }
@@ -62,7 +59,7 @@ public class UrlPrintStrategy implements PrintStrategy {
 
     private String getImg(String u,int i) {
         URL url;
-        String imagePath= PrintController.temporaryFileStorageDirectoryStatic + System.currentTimeMillis()+i + SUFFIX;
+        String imagePath= System.currentTimeMillis()+i + SUFFIX;
         try {
             url = new URL(u);
             InputStream in = null;

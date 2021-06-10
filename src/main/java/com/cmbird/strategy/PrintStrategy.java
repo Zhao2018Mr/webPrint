@@ -18,5 +18,5 @@ public interface PrintStrategy {
      * @param requestVo
      * @return java.lang.String
      */
-    AjaxResult print(String data) throws Exception;
+    AjaxResult print(RequestVo requestVo) throws Exception;
 }

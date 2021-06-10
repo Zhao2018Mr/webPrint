@@ -6,8 +6,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.Socket;
 
 public class DialogUtil {
     public static void showMessage(String title, String header, String content) {
@@ -60,6 +62,19 @@ public class DialogUtil {
         alert.getDialogPane().setExpandableContent(expContent);
 
         alert.showAndWait();
+    }
+
+    public static void main(String[] args) {
+        Socket socket = null;
+        try {
+            socket = new Socket("  ",4001);
+            socket.setSoTimeout(30*1000);
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
 }

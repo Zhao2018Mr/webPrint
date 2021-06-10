@@ -76,7 +76,7 @@ public class WebSocketServer {
     public void onMessage(String data) throws Exception {
         logger.info("打印----{}",data);
         RequestVo requestVo= JSON.parseObject(data,RequestVo.class);
-        AjaxResult ajaxResult = SpringUtil.getBean(FactoryForPrintStrategy.class).getStrategy(requestVo.getType()).print(requestVo.getData());
+        AjaxResult ajaxResult = SpringUtil.getBean(FactoryForPrintStrategy.class).getStrategy(requestVo.getType()).print(requestVo);
         for (Session session: sessionPools.values()) {
             try {
                 sendMessage(session, JSON.toJSONString(ajaxResult));

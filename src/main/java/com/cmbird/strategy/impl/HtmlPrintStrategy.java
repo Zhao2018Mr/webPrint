@@ -2,6 +2,7 @@ package com.cmbird.strategy.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.cmbird.javafx.controller.PrintController;
+import com.cmbird.print.websocket.domain.RequestVo;
 import com.cmbird.strategy.PrintStrategy;
 import com.cmbird.utils.AjaxResult;
 import com.cmbird.utils.HtmlToImageUtils;
@@ -31,12 +32,12 @@ public class HtmlPrintStrategy implements PrintStrategy {
      * @return java.lang.String
      */
     @Override
-    public AjaxResult print(String data) {
-        List<String> htmls= JSON.parseArray(data,String.class);
+    public AjaxResult print(RequestVo requestVo) {
+        List<String> htmls= JSON.parseArray(requestVo.getData(),String.class);
         try {
             for (String html : htmls) {
-                HtmlToImageUtils.html2Img(html, PrintController.temporaryFileStorageDirectoryStatic);
-                AjaxResult ajaxResult = PrintUtils.JPGPrint(new File(PrintController.temporaryFileStorageDirectoryStatic));
+                HtmlToImageUtils.html2Img(html,requestVo.getPrinter() );
+                AjaxResult ajaxResult = PrintUtils.JPGPrint(new File(System.getProperty("user.dir")),requestVo.getPrinter());
                 if (200 != (Integer)ajaxResult.get("code")) {
                     return ajaxResult;
                 }

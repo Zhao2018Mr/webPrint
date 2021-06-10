@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
 public class App extends Application {
@@ -25,6 +28,7 @@ public class App extends Application {
         fxmlLoader.setControllerFactory(springContext::getBean);
         root = fxmlLoader.load();
     }
+
 
     public static void main(String[] args) {
         launch(App.class,args);
