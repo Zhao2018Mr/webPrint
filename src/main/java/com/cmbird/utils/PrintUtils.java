@@ -116,11 +116,13 @@ public class PrintUtils {
         if(StringUtils.isEmpty(printer)){
             printer=PrintServiceLookup.lookupDefaultPrintService().getName();
         }
-        for (int y = 0; y < services.length; y++) {
-            if (printer.equals(services[y].toString())) {
-                printerValue = services[y];
+        for (PrintService service : services) {
+            if (printer.equals(service.getName())) {
+                printerValue = service;
+                break;
             }
         }
+
         je.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, printerValue);
         je.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, false);
         je.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, false);

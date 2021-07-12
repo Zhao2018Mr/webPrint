@@ -41,7 +41,11 @@ public class ReportPrintStrategy implements PrintStrategy {
         JSONArray jsonArray=JSON.parseArray(requestVo.getData());
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            for (Integer integer = 0; integer < jsonObject.getInteger("printCount"); integer++) {
+            Integer printCount = jsonObject.getInteger("printCount");
+            if(printCount==null){
+                printCount = 1 ;
+            }
+            for (Integer integer = 0; integer < printCount; integer++) {
                 List<Object> jsonObjects=new ArrayList<>();
                 jsonObjects.add(jsonObject);
                 PrintUtils.printReport(requestVo.getPrinter(),requestVo.getBaseUrl()+ URLEncoder.encode(requestVo.getReportName(),"utf-8") ,jsonObjects);
